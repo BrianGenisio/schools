@@ -13,34 +13,65 @@ type School = {
 class Schools extends Component {
     props: {
         postalCode: string,
-        data: {
-            loading: boolean,
-            allSchools?: Array<School>,
-        }
+
+        schools: Array<School>,
+        isLoading: boolean,
+        isEmpty: boolean,
+        isError: boolean,
     }
 
     render() {
-        const {data} = this.props;
-        const {loading, allSchools = []} = data;
+        const {schools, isLoading, isEmpty, isError} = this.props;
 
-        if (loading) {
-            return (<div>Loading</div>)
+        if (isLoading) {
+            return <div>Loading</div>;
+        }
+
+        if (isEmpty) {
+            return <div>No items match your postal code</div>;
+        }
+
+        if (isError) {
+            return <div>There was an error processing your search</div>;
         }
 
         return <ul>{
-            allSchools.map((school) =>
+            schools.map((school) =>
                 <li key={school.id}>{school.display}</li>
             )
         }</ul>;
     }
 }
 
-const SCHOOLS_QUERY = gql`query allSchools {
-  allSchools(orderBy: display_ASC) {
+const SCHOOLS_QUERY = gql`query allSchools($postalCode: String!) {
+  allSchools(
+      orderBy: display_ASC,
+      filter: {postalCode: $postalCode}
+  ) {
     id
     postalCode
     display
   }
 }`;
 
-export default graphql(SCHOOLS_QUERY)(Schools);
+type SchoolsData =  {
+    loading: boolean,
+    error: string,
+    allSchools?: Array<School>,
+};
+
+const mapDataToProps = ({data}: {data: SchoolsData}) => {
+    const isLoading = data.loading;
+    const isEmpty = !!data.allSchools && data.allSchools.length === 0;
+    const isError = !!data.error;
+    const schools = data.allSchools || [];
+
+    return {isLoading, isEmpty, isError, schools};
+};
+
+const mapPropsToOptions = ({postalCode}) => ({variables: {postalCode}});
+
+export default graphql(SCHOOLS_QUERY, {
+    options: mapPropsToOptions,
+    props: mapDataToProps,
+})(Schools);
