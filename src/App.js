@@ -12,7 +12,7 @@ class App extends Component {
           <h2>Welcome to your School Search</h2>
         </div>
 
-        <Schools />
+        <Schools postalCode="48103" />
       </div>
     );
   }

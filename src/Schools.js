@@ -4,17 +4,34 @@ import React, {Component} from "react";
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
+type School = {
+    id: string,
+    postalCode: string,
+    display: string,
+}
+
 class Schools extends Component {
+    props: {
+        postalCode: string,
+        data: {
+            loading: boolean,
+            allSchools?: Array<School>,
+        }
+    }
+
     render() {
-        if (this.props.data.loading) {
+        const {data} = this.props;
+        const {loading, allSchools = []} = data;
+
+        if (loading) {
             return (<div>Loading</div>)
         }
 
-        return <ul>
-        {this.props.data.allSchools.map((school) =>
-            <li key={school.id}>{school.display}</li>
-        )}
-        </ul>;
+        return <ul>{
+            allSchools.map((school) =>
+                <li key={school.id}>{school.display}</li>
+            )
+        }</ul>;
     }
 }
 
