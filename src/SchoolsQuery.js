@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import {Component} from 'react';
 import {graphql} from 'react-apollo';
 
-type School = {
+export type School = {
     id: string,
     postalCode: string,
     display: string,
