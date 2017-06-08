@@ -28,8 +28,8 @@ class CreateSchool extends Component {
                 postalCode={postalCode}
                 display={display}
             >
-                {onNewSchool => <button onClick={onNewSchool}>
-                    Create!    
+                {triggerMutation => <button onClick={triggerMutation}>
+                    Create!
                 </button>}
             </NewSchoolMutation>
         </div>;
