@@ -12,18 +12,18 @@ class NewSchoolsMutation extends Component {
         postalCode: string,
         display: string,
         children?: (createSchool: () => Promise<School>) => React$Element<any>,
-        triggerMutation: MutationCallback,
+        onCreateSchool: MutationCallback,
     }
 
-    handleExecuteMutation = () => {
-        const {postalCode, display, triggerMutation} = this.props;
-        return triggerMutation(postalCode, display);
+    triggerMutation = () => {
+        const {postalCode, display, onCreateSchool} = this.props;
+        return onCreateSchool(postalCode, display);
     }
 
     render() {
         const {children} = this.props;
 
-        return children && children(this.handleExecuteMutation);
+        return children && children(this.triggerMutation);
     }
 }
 
